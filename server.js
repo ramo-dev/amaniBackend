@@ -30,8 +30,7 @@ app.post("/welcome",  (req, res) => {
       try {
         const result = await africasTalking.SMS.send({
           to: internationalPhone,
-          message: `Hello ${firstname},Welcome to Amani Sacco! \nThank you for registering with us.\nIf you need any assistance, please visit our website: [Your Website Link] \nor contact our support team at [Support Contact Information].
-      `,
+          message: `Hello ${firstname},\nWelcome to Amani Sacco.\nYou will receive updates on your account and other important information.\nThank you for choosing Amani Sacco!`,
           from: "AMANI-SACCO",
         });
         console.log(result)
@@ -46,6 +45,32 @@ app.post("/welcome",  (req, res) => {
     res.status(500).json({ error: "An error occurred while sending SMS" });
   }
 });
+
+app.post("/subscribe", (req, res) => {
+  try {
+    const { name, phone } = req.body;
+    console.log("Received phone number:", phone);
+    const internationalPhone = `+254${phone}`;
+    async function sendSms() {
+      try {
+        const result = await africasTalking.SMS.send({
+          to: internationalPhone,
+          message: `Hello,\nYou have successfully subscribed to Amani Sacco's SMS notifications.\nYou will receive updates on your account and other important information.\nThank you for choosing Amani Sacco!`,
+          from: "AMANI-SACCO",
+        });
+        console.log(result);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    sendSms();
+    res.status(200).json({ message: "SMS sent successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "An error occurred while sending SMS" });
+  }
+});
+
 app.post("/getLoan", (req, res) => {
   try {
     const { firstname, phone, ...additionalData } = req.body;
